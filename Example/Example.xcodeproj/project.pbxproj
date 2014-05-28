@@ -7,9 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		D025383A1935E962008A80BC /* TencentOpenAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A210DB181CE6370060AEC1 /* TencentOpenAPI.framework */; };
+		D025383B1935E96B008A80BC /* RennSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75EF2861820E3E3005030AD /* RennSDK.framework */; };
 		D75EF2821820E1C0005030AD /* CURenrenClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D75EF2811820E1C0005030AD /* CURenrenClient.m */; };
 		D75EF2871820E3E3005030AD /* RennSDK.bundle in Resources */ = {isa = PBXBuildFile; fileRef = D75EF2851820E3E3005030AD /* RennSDK.bundle */; };
-		D75EF2881820E3E3005030AD /* RennSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D75EF2861820E3E3005030AD /* RennSDK.framework */; };
 		D75EF28B18210879005030AD /* CURenrenAPIClient.m in Sources */ = {isa = PBXBuildFile; fileRef = D75EF28A18210879005030AD /* CURenrenAPIClient.m */; };
 		D7A210B8181CB2D30060AEC1 /* test.jpg in Resources */ = {isa = PBXBuildFile; fileRef = D7A210B7181CB2D30060AEC1 /* test.jpg */; };
 		D7A210BA181CB89D0060AEC1 /* test.gif in Resources */ = {isa = PBXBuildFile; fileRef = D7A210B9181CB89D0060AEC1 /* test.gif */; };
@@ -21,7 +22,6 @@
 		D7A210CB181CBADA0060AEC1 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A210CA181CBADA0060AEC1 /* CoreTelephony.framework */; };
 		D7A210CD181CBAE80060AEC1 /* libstdc++.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A210CC181CBAE70060AEC1 /* libstdc++.dylib */; };
 		D7A210CF181CBAEF0060AEC1 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A210CE181CBAEF0060AEC1 /* libz.dylib */; };
-		D7A210DC181CE6370060AEC1 /* TencentOpenAPI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7A210DB181CE6370060AEC1 /* TencentOpenAPI.framework */; };
 		D7C0D52D181A377200C34D7F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C0D52C181A377200C34D7F /* Foundation.framework */; };
 		D7C0D52F181A377200C34D7F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C0D52E181A377200C34D7F /* CoreGraphics.framework */; };
 		D7C0D531181A377200C34D7F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D7C0D530181A377200C34D7F /* UIKit.framework */; };
@@ -32,7 +32,6 @@
 		D7C0D552181A377200C34D7F /* ExampleTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C0D551181A377200C34D7F /* ExampleTests.m */; };
 		D7C0D564181A37B400C34D7F /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C0D55D181A37B400C34D7F /* AppDelegate.m */; };
 		D7C0D565181A37B400C34D7F /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = D7C0D55E181A37B400C34D7F /* InfoPlist.strings */; };
-		D7C0D566181A37B400C34D7F /* Example-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = D7C0D560181A37B400C34D7F /* Example-Info.plist */; };
 		D7C0D567181A37B400C34D7F /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D7C0D562181A37B400C34D7F /* Images.xcassets */; };
 		D7C0D568181A37B400C34D7F /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C0D563181A37B400C34D7F /* main.m */; };
 		D7C0D579181A3DAC00C34D7F /* CUShareCenter.m in Sources */ = {isa = PBXBuildFile; fileRef = D7C0D578181A3DAC00C34D7F /* CUShareCenter.m */; };
@@ -132,15 +131,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D7A210CF181CBAEF0060AEC1 /* libz.dylib in Frameworks */,
+				D025383A1935E962008A80BC /* TencentOpenAPI.framework in Frameworks */,
 				D7A210CD181CBAE80060AEC1 /* libstdc++.dylib in Frameworks */,
 				D7A210CB181CBADA0060AEC1 /* CoreTelephony.framework in Frameworks */,
 				D7A210C9181CBAD40060AEC1 /* libsqlite3.dylib in Frameworks */,
 				D7A210C7181CBACA0060AEC1 /* SystemConfiguration.framework in Frameworks */,
+				D025383B1935E96B008A80BC /* RennSDK.framework in Frameworks */,
 				D7A210C5181CBAC00060AEC1 /* libiconv.dylib in Frameworks */,
-				D75EF2881820E3E3005030AD /* RennSDK.framework in Frameworks */,
 				D7C0D52F181A377200C34D7F /* CoreGraphics.framework in Frameworks */,
 				D7C0D531181A377200C34D7F /* UIKit.framework in Frameworks */,
-				D7A210DC181CE6370060AEC1 /* TencentOpenAPI.framework in Frameworks */,
 				D7C0D52D181A377200C34D7F /* Foundation.framework in Frameworks */,
 				F580A03EAA75484ABBB33A87 /* libPods.a in Frameworks */,
 			);
@@ -410,7 +409,7 @@
 		D7C0D521181A377200C34D7F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0500;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = curer;
 				TargetAttributes = {
 					D7C0D543181A377200C34D7F = {
@@ -447,7 +446,6 @@
 				D7C0D567181A37B400C34D7F /* Images.xcassets in Resources */,
 				D7A210B8181CB2D30060AEC1 /* test.jpg in Resources */,
 				D7C0D593181A47C400C34D7F /* SinaWeibo.bundle in Resources */,
-				D7C0D566181A37B400C34D7F /* Example-Info.plist in Resources */,
 				D7C0D565181A37B400C34D7F /* InfoPlist.strings in Resources */,
 				D7C0D59B181A50FD00C34D7F /* ExampleViewController.xib in Resources */,
 			);
@@ -562,7 +560,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -601,7 +598,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -638,9 +634,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/curer/myGitHub/CUShareCenter/CUShareCenter/Vendor/qq/**",
-					/Users/curer/myGitHub/CUShareCenter/Example,
-					"/Users/curer/myGitHub/CUShareCenter/CUShareCenter/Vendor/renren/**",
+					"$(SRCROOT)/CUShareCenter/CUShareCenter/Vendor/qq/**",
+					"$(SRCROOT)/CUShareCenter/Example",
+					"$(SRCROOT)/CUShareCenter/CUShareCenter/Vendor/renren/**",
+					/Users/amudi/Projects/CUShareCenter/CUShareCenter/Vendor/qq,
+					/Users/amudi/Projects/CUShareCenter/CUShareCenter/Vendor/renren,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/Example-Prefix.pch";
@@ -653,7 +651,7 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "Example/Example-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -682,9 +680,11 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"/Users/curer/myGitHub/CUShareCenter/CUShareCenter/Vendor/qq/**",
-					/Users/curer/myGitHub/CUShareCenter/Example,
-					"/Users/curer/myGitHub/CUShareCenter/CUShareCenter/Vendor/renren/**",
+					"$(SRCROOT)/CUShareCenter/CUShareCenter/Vendor/qq/**",
+					"$(SRCROOT)/CUShareCenter/Example",
+					"$(SRCROOT)/CUShareCenter/CUShareCenter/Vendor/renren/**",
+					/Users/amudi/Projects/CUShareCenter/CUShareCenter/Vendor/qq,
+					/Users/amudi/Projects/CUShareCenter/CUShareCenter/Vendor/renren,
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Example/Example-Prefix.pch";
@@ -697,7 +697,7 @@
 					"$(SDKROOT)/usr/include/libxml2",
 				);
 				INFOPLIST_FILE = "Example/Example-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
 				LIBRARY_SEARCH_PATHS = "";
 				OTHER_LDFLAGS = (
 					"-ObjC",
@@ -721,7 +721,6 @@
 		D7C0D559181A377200C34D7F /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
@@ -744,7 +743,6 @@
 		D7C0D55A181A377200C34D7F /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/Example.app/Example";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",

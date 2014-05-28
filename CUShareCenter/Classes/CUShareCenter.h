@@ -9,9 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "CUShareClient.h"
 
+@class AFHTTPRequestOperation;
 @class CUPlatFormUserModel;
 @class CUPlatFormOAuth;
-@class ASIHTTPRequest;
+
 @protocol CUShareClientDataSource <NSObject>
 
 - (id)initWithPlatForm:(PlatFormModel *)model;
@@ -27,7 +28,7 @@
 #pragma mark - userInfo
 
 - (CUPlatFormOAuth *)OAuthInfo;
-- (ASIHTTPRequest *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock;
+- (AFHTTPRequestOperation *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock;
 - (void)userInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock;
 
 #pragma mark - share

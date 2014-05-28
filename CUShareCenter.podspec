@@ -11,7 +11,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/studentdeng/CUShareCenter"
   s.license      = 'MIT'
   s.author       = { "curer" => "studentdeng@hotmail.com" }
-  s.platform     = :ios, '5.0'
+  s.platform     = :ios, '6.0'
 
   s.source       = { :git => "https://github.com/studentdeng/CUShareCenter.git", :tag => s.version.to_s }
   s.source_files  = 'CUShareCenter', 'CUShareCenter/**/*.{h,m}'
@@ -24,5 +24,5 @@ Pod::Spec.new do |s|
   s.library = 'sqlite3', 'stdc++'
   s.requires_arc = true
 
-  s.dependency 'CURestKit', '~> 1.0.3'
+  s.dependency 'AFNetworking', '~> 2.2.4'
 end

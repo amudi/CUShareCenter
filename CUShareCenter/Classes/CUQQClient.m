@@ -11,7 +11,7 @@
 #import "PlatFormModel.h"
 #import "CUPlatFormOAuth.h"
 #import "CUPlatFormUserModel.h"
-#import <CURestKit/CURestkit.h>
+#import <AFNetworking/AFNetworking.h>
 
 #import <TencentOpenAPI/TencentOAuth.h>
 #import <TencentOpenAPI/TencentApiInterface.h>
@@ -26,7 +26,7 @@
 @property (nonatomic, strong) void (^successBlock)(NSString *message, id data);
 @property (nonatomic, strong) void (^failedBlock)( NSString *message, id data);
 
-@property (nonatomic, strong) ASIHTTPRequest *request;
+@property (nonatomic, strong) AFHTTPRequestOperation *request;
 
 @end
 
@@ -161,12 +161,12 @@
 
 - (void)userInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request = [self requestUserInfoSuccess:success error:errorBlock];
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
-- (ASIHTTPRequest *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
+- (AFHTTPRequestOperation *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
     if (!self.qqOAuthSDK.isSessionValid) {
         return nil;
@@ -174,7 +174,7 @@
     
     __weak typeof(self)selfWeak = self;
     
-    ASIHTTPRequest *request =
+    AFHTTPRequestOperation *request =
     [CUQQAPIClient userInfoWithOAuth:selfWeak.qqOAuthSDK
                              success:^(id json) {
                                  CUPlatFormUserModel *model = [CUPlatFormUserModel new];
@@ -204,7 +204,7 @@
 {
     __weak typeof(self)selfWeak = self;
     
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request =
     [CUQQAPIClient postContent:content
                          OAuth:selfWeak.qqOAuthSDK
@@ -214,7 +214,7 @@
                            errorBlock(errorMsg);
                        }];
     
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
 - (void)content:(NSString *)content
@@ -224,7 +224,7 @@
 {
     __weak typeof(self)selfWeak = self;
     
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request =
     [CUQQAPIClient postContent:content
                      ImageData:imageData
@@ -235,7 +235,7 @@
                            errorBlock(errorMsg);
                        }];
     
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
 - (void)content:(NSString *)content
@@ -251,7 +251,7 @@
     self.successBlock = nil;
     self.failedBlock = nil;
     
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

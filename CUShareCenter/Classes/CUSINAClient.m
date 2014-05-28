@@ -11,8 +11,7 @@
 #import "CUPlatFormOAuth.h"
 #import "CUPlatFormUserModel.h"
 
-
-#import <CURestKit/CURestkit.h>
+#import <AFNetworking/AFNetworking.h>
 #import "CUSinaAPIClient.h"
 
 #define SINA_ACCESSTOKEN_KEY    @"com.sina.accessToken"
@@ -29,7 +28,7 @@
 @property (nonatomic, strong) void (^successBlock)(NSString *message, id data);
 @property (nonatomic, strong) void (^failedBlock)( NSString *message, id data);
 
-@property (nonatomic, strong) ASIHTTPRequest *request;
+@property (nonatomic, strong) AFHTTPRequestOperation *request;
 
 @end
 
@@ -120,12 +119,12 @@
 
 - (void)userInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request = [self requestUserInfoSuccess:success error:errorBlock];
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
-- (ASIHTTPRequest *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
+- (AFHTTPRequestOperation *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
     if (!self.sinaweiboSDK.isAuthValid) {
         return nil;
@@ -136,36 +135,58 @@
     
     NSAssert(accessToken, @"accessToken nil");
     NSAssert(uid, @"uid nil");
-    
-    ASIHTTPRequest *request =
-    [[CUSinaAPIClient shareObjectManager] getJSONRequestAtPath:@"2/users/show.json"
-                                                    parameters:@{
-                                                                 @"access_token" : accessToken,
-                                                                 @"uid" : uid
-                                                                 }
-                                                       success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                           
-                                                           CUPlatFormUserModel *model = [CUPlatFormUserModel new];
-                                                           model.userId = self.sinaweiboSDK.userID;
-                                                           model.nickname = json[@"screen_name"];
-                                                           model.avatar = json[@"avatar_hd"];
-                                                           model.platform = @"新浪微博";
-                                                           model.orginalData = json;
-                                                           model.gender = json[@"gender"];
-                                                           if ([model.gender isEqualToString:@"m"]) {
-                                                               model.gender = @"男";
-                                                           }
-                                                           else
-                                                           {
-                                                               model.gender = @"女";
-                                                           }
-                                                           
-                                                           success(model);
-                                                           
-                                                       } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                           errorBlock(ASIRequest.responseString);
-                                                       }];
-    return request;
+
+    NSURLRequest *request = [[CUSinaAPIClient shareObjectManager].requestSerializer requestWithMethod:@"GET"
+                                                                                            URLString:[[NSURL URLWithString:@"2/user/show.json" relativeToURL:[CUSinaAPIClient baseURL]] absoluteString]
+                                                                                           parameters:@{
+                                                                                                        @"access_token" : accessToken,
+                                                                                                        @"uid" : uid
+                                                                                                        }
+                                                                                                error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer new];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *json = (NSDictionary *)responseObject;
+        CUPlatFormUserModel *model = [CUPlatFormUserModel new];
+        model.userId = self.sinaweiboSDK.userID;
+        model.nickname = json[@"screen_name"];
+        model.avatar = json[@"avatar_id"];
+        model.platform = @"新浪微博";
+        model.gender = json[@"gender"];
+        success(model);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
+//    ASIHTTPRequest *request =
+//    [[CUSinaAPIClient shareObjectManager] getJSONRequestAtPath:@"2/users/show.json"
+//                                                    parameters:@{
+//                                                                 @"access_token" : accessToken,
+//                                                                 @"uid" : uid
+//                                                                 }
+//                                                       success:^(ASIHTTPRequest *ASIRequest, id json) {
+//                                                           
+//                                                           CUPlatFormUserModel *model = [CUPlatFormUserModel new];
+//                                                           model.userId = self.sinaweiboSDK.userID;
+//                                                           model.nickname = json[@"screen_name"];
+//                                                           model.avatar = json[@"avatar_hd"];
+//                                                           model.platform = @"新浪微博";
+//                                                           model.orginalData = json;
+//                                                           model.gender = json[@"gender"];
+//                                                           if ([model.gender isEqualToString:@"m"]) {
+//                                                               model.gender = @"男";
+//                                                           }
+//                                                           else
+//                                                           {
+//                                                               model.gender = @"女";
+//                                                           }
+//                                                           
+//                                                           success(model);
+//                                                           
+//                                                       } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
+//                                                           errorBlock(ASIRequest.responseString);
+//                                                       }];
+//    return request;
 }
 
 #pragma mark - share
@@ -173,7 +194,7 @@
 - (void)content:(NSString *)content success:(void (^)(id data))success
            error:(void (^)(id error))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     
     self.request = [self requestContent:content
                                imageURL:nil
@@ -189,9 +210,9 @@
         success:(void (^)(id data))success
           error:(void (^)(id error))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request = [self requestContent:content imageData:imageData success:success error:errorBlock];
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
 - (void)content:(NSString *)content
@@ -199,12 +220,12 @@
         success:(void (^)(id data))success
           error:(void (^)(id error))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request = [self requestContent:content imageURL:imageURL success:success error:errorBlock];
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
-- (ASIHTTPRequest *)requestContent:(NSString *)content
+- (AFHTTPRequestOperation *)requestContent:(NSString *)content
                           imageURL:(NSString *)imageURL
                            success:(void (^)(id data))success
                              error:(void (^)(id error))errorBlock
@@ -213,7 +234,7 @@
     return nil;
 }
 
-- (ASIHTTPRequest *)requestContent:(NSString *)content
+- (AFHTTPRequestOperation *)requestContent:(NSString *)content
                          imageData:(NSData *)imageData
                            success:(void (^)(id data))success
                              error:(void (^)(id error))errorBlock
@@ -225,19 +246,27 @@
     NSString *accessToken = self.sinaweiboSDK.accessToken;
     NSAssert(accessToken, @"accessToken nil");
     
-    ASIHTTPRequest *request = [[CUSinaAPIClient shareObjectManager] postJSONRequestAtPath:@"2/statuses/upload.json"
-                                                                                userBlock:^(ASIFormDataRequest *ASIRequest) {
-                                                                                    [ASIRequest addPostValue:content forKey:@"status"];
-                                                                                    [ASIRequest setPostValue:accessToken forKey:@"access_token"];
-                                                                                    [ASIRequest addData:imageData forKey:@"pic"];
-                                                                                    
-                                                                                } success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                                                    success(json);
-                                                                                } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                                                    errorBlock(errorMsg);
-                                                                                }];
-    
-    return request;
+    NSURLRequest *request = [[CUSinaAPIClient shareObjectManager].requestSerializer multipartFormRequestWithMethod:@"POST"
+                                                                                                         URLString:[[NSURL URLWithString:@"2/statuses/upload.json" relativeToURL:[CUSinaAPIClient baseURL]] absoluteString]
+                                                                                                        parameters:@{
+                                                                                                                     @"status" : content,
+                                                                                                                     @"access_token" : accessToken
+                                                                                                                     }
+                                                                                         constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                                                             [formData appendPartWithFileData:imageData
+                                                                                                                         name:@"pic"
+                                                                                                                     fileName:@"image.jpg"
+                                                                                                                     mimeType:@"image/jpeg"];
+                                                                                         }
+                                                                                                             error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer new];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        success(responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
 }
 
 - (void)clear
@@ -246,7 +275,7 @@
     self.successBlock = nil;
     self.failedBlock = nil;
     
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

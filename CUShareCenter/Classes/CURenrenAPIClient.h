@@ -7,10 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CURestKit/CURestkit.h>
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
 
 @interface CURenrenAPIClient : NSObject
 
-+ (CUObjectManager *)shareObjectManager;
++ (AFHTTPRequestOperationManager *)shareObjectManager;
++ (NSURL *)baseURL;
 
 @end

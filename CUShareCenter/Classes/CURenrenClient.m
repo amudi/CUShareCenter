@@ -15,7 +15,7 @@
 
 @interface CURenrenClient ()
 
-@property (nonatomic, strong) ASIHTTPRequest *request;
+@property (nonatomic, strong) AFHTTPRequestOperation *request;
 
 @property (nonatomic, strong) void (^successBlock)(NSString *message, id data);
 @property (nonatomic, strong) void (^failedBlock)( NSString *message, id data);
@@ -99,12 +99,12 @@
 
 - (void)userInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     self.request = [self requestUserInfoSuccess:success error:errorBlock];
-    [self.request startAsynchronous];
+    [self.request start];
 }
 
-- (ASIHTTPRequest *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
+- (AFHTTPRequestOperation *)requestUserInfoSuccess:(void (^)(CUPlatFormUserModel *model))success error:(void (^)(id data))errorBlock
 {
     if (![RennClient isAuthorizeValid]) {
         return nil;
@@ -116,29 +116,28 @@
     NSAssert(accessToken, @"accessToken nil");
     NSAssert(uid, @"uid nil");
     
-    ASIHTTPRequest *request =
-    [[CURenrenAPIClient shareObjectManager] getJSONRequestAtPath:@"v2/user/get"
-                                                      parameters:@{
-                                                                   @"access_token" : accessToken,
-                                                                   @"userId" : uid
-                                                                   }
-                                                         success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                             
-                                                             id responseJSON = json[@"response"];
-                                                           
-                                                             CUPlatFormUserModel *model = [CUPlatFormUserModel new];
-                                                             model.userId = uid;
-                                                             model.nickname = responseJSON[@"name"];
-                                                             model.avatar = responseJSON[@"avatar"][3][@"url"];
-                                                             model.platform = @"renren";
-                                                             model.orginalData = responseJSON;
-                                                           
-                                                             success(model);
-                                                           
-                                                         } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                             errorBlock(ASIRequest.responseString);
-                                                         }];
-    return request;
+    NSURLRequest *request = [[CURenrenAPIClient shareObjectManager].requestSerializer requestWithMethod:@"GET"
+                                                                                              URLString:[[NSURL URLWithString:@"v2/user/get" relativeToURL:[CURenrenAPIClient baseURL]] absoluteString]
+                                                                                             parameters:@{
+                                                                                                          @"access_token" : accessToken,
+                                                                                                          @"userId" : uid
+                                                                                                          }
+                                                                                                  error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer new];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSDictionary *responseDict = (NSDictionary *)responseObject;
+        NSDictionary *responseJSON = responseDict[@"response"];
+        CUPlatFormUserModel *model = [CUPlatFormUserModel new];
+        model.userId = uid;
+        model.nickname = responseJSON[@"name"];
+        model.avatar = responseJSON[@"avatar"][3][@"url"];
+        model.platform = @"renren";
+        success(model);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
 }
 
 #pragma mark - share
@@ -176,23 +175,29 @@
 {
     NSString *accessToken = [RennClient accessToken].accessToken;
     
-    [self.request clearDelegatesAndCancel];
-    self.request =
-    [[CURenrenAPIClient shareObjectManager] postJSONRequestAtPath:@"v2/feed/put"
-                                                       parameters:@{
-                                                                    @"access_token" : accessToken,
-                                                                    @"description" : description,
-                                                                    @"imageUrl" : imageURL,
-                                                                    @"title" : title,
-                                                                    @"targetUrl" : link,
-                                                                    @"message" : content
-                                                                    }
-                                                          success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                              success(json);
-                                                          } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                              errorBlock(errorMsg);
-                                                          }];
-    [self.request startAsynchronous];
+    [self.request cancel];
+    
+    NSURLRequest *request = [[CURenrenAPIClient shareObjectManager].requestSerializer requestWithMethod:@"POST"
+                                                                                              URLString:[[NSURL URLWithString:@"v2/feed/put" relativeToURL:[CURenrenAPIClient baseURL]] absoluteString]
+                                                                                             parameters:@{
+                                                                                                          @"access_token" : accessToken,
+                                                                                                          @"description" : description,
+                                                                                                          @"imageUrl" : imageURL,
+                                                                                                          @"title" : title,
+                                                                                                          @"targetUrl" : link,
+                                                                                                          @"message" : content
+                                                                                                          }
+                                                                                                  error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    op.responseSerializer = [AFJSONResponseSerializer new];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        success(responseObject);
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    
+    self.request = op;
+    [self.request start];
 }
 
 - (void)clear
@@ -200,7 +205,7 @@
     self.successBlock = nil;
     self.failedBlock = nil;
     
-    [self.request clearDelegatesAndCancel];
+    [self.request cancel];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

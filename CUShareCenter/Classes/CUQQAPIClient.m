@@ -8,95 +8,127 @@
 
 #import "CUQQAPIClient.h"
 
+static NSString * const baseURLString = @"https://graph.qq.com/";
+
 @implementation CUQQAPIClient
 
-+ (CUObjectManager *)shareObjectManager
++ (AFHTTPRequestOperationManager *)shareObjectManager
 {
     static dispatch_once_t pred = 0;
-    __strong static CUObjectManager *_sharedObject = nil;
+    __strong static AFHTTPRequestOperationManager *_sharedObject = nil;
     dispatch_once(&pred, ^{
-        _sharedObject = [[CUObjectManager alloc] init]; // or some other init method
-        _sharedObject.baseURLString = @"https://graph.qq.com/";
+        _sharedObject = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:baseURLString]];
         [CUQQAPIClient setup:_sharedObject];
     });
     
     return _sharedObject;
 }
 
-+ (void)setup:(CUObjectManager *)objectManager
++ (void)setup:(AFHTTPRequestOperationManager *)objectManager
 {
     
 }
 
-+ (ASIHTTPRequest *)userInfoWithOAuth:(TencentOAuth *)oAuth
-                              success:(void (^)(id json))success
-                                error:(void (^)(NSString *errorMsg))errorBlock;
++ (AFHTTPRequestOperation *)userInfoWithOAuth:(TencentOAuth *)oAuth
+                                      success:(void (^)(id json))success
+                                        error:(void (^)(NSString *errorMsg))errorBlock;
 {
-    ASIHTTPRequest *request =
-    [[CUQQAPIClient shareObjectManager] getJSONRequestAtPath:@"user/get_user_info"
-                                                  parameters:@{
-                                                               @"access_token" : oAuth.accessToken,
-                                                               @"openid" : oAuth.openId,
-                                                               @"oauth_consumer_key" : oAuth.appId,
-                                                               @"format" : @"json"
-                                                               }
-                                                     success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                         success(json);
-                                                     } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                         errorBlock(errorMsg);
-                                                     }];
-    
-    return request;
+    NSURLRequest *request =
+    [[CUQQAPIClient shareObjectManager].requestSerializer requestWithMethod:@"GET"
+                                                                  URLString:[[NSURL URLWithString:@"user/get_user_info"
+                                                                                    relativeToURL:[NSURL URLWithString:baseURLString]]
+                                                                             absoluteString]
+                                                                 parameters:@{
+                                                                              @"access_token" : oAuth.accessToken,
+                                                                              @"openid" : oAuth.openId,
+                                                                              @"oauth_consumer_key" : oAuth.appId,
+                                                                              @"format" : @"json"
+                                                                              }
+                                                                      error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSError *error;
+        id json = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+        if (error) {
+            errorBlock([error localizedDescription]);
+        } else {
+            success(json);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
 }
 
-+ (ASIHTTPRequest *)postContent:(NSString *)content
-                          OAuth:(TencentOAuth *)oAuth
-                        success:(void (^)(id json))success
-                          error:(void (^)(NSString *errorMsg))errorBlock
++ (AFHTTPRequestOperation *)postContent:(NSString *)content
+                                  OAuth:(TencentOAuth *)oAuth
+                                success:(void (^)(id json))success
+                                  error:(void (^)(NSString *errorMsg))errorBlock
 {
-    ASIHTTPRequest *request =
-    
-    [[CUQQAPIClient shareObjectManager] postJSONRequestAtPath:@"t/add_t"
-                                                   parameters:@{
-                                                                @"access_token" : oAuth.accessToken,
-                                                                @"openid" : oAuth.openId,
-                                                                @"oauth_consumer_key" : oAuth.appId,
-                                                                @"format" : @"json",
-                                                                @"content" : content
-                                                                }
-                                                      success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                          success(json);
-                                                      } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                          errorBlock(errorMsg);
-                                                      }];
-    return request;
+    NSURLRequest *request =
+    [[CUQQAPIClient shareObjectManager].requestSerializer requestWithMethod:@"POST"
+                                                                  URLString:[[NSURL URLWithString:@"t/add_t"
+                                                                                    relativeToURL:[NSURL URLWithString:baseURLString]]
+                                                                             absoluteString]
+                                                                 parameters:@{
+                                                                              @"access_token" : oAuth.accessToken,
+                                                                              @"openid" : oAuth.openId,
+                                                                              @"oauth_consumer_key" : oAuth.appId,
+                                                                              @"format" : @"json"
+                                                                              }
+                                                                      error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSError *error;
+        id json = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+        if (error) {
+            errorBlock([error localizedDescription]);
+        } else {
+            success(json);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
 }
 
-+ (ASIHTTPRequest *)postContent:(NSString *)content
++ (AFHTTPRequestOperation *)postContent:(NSString *)content
                       ImageData:(NSData *)imageData
                           OAuth:(TencentOAuth *)oAuth
                         success:(void (^)(id json))success
                           error:(void (^)(NSString *errorMsg))errorBlock
 {
-    ASIHTTPRequest *request =
-    [[CUQQAPIClient shareObjectManager] postJSONRequestAtPath:@"t/add_pic_t"
-                                                    userBlock:^(ASIFormDataRequest *ASIRequest) {
-                                                        
-                                                        [ASIRequest addPostValue:oAuth.accessToken forKey:@"access_token"];
-                                                        [ASIRequest addPostValue:oAuth.openId forKey:@"openid"];
-                                                        [ASIRequest addPostValue:oAuth.appId forKey:@"oauth_consumer_key"];
-                                                        [ASIRequest addPostValue:@"json" forKey:@"format"];
-                                                        
-                                                        [ASIRequest addPostValue:content forKey:@"content"];
-                                                        [ASIRequest addData:imageData forKey:@"pic"];
-                                                        
-                                                    } success:^(ASIHTTPRequest *ASIRequest, id json) {
-                                                        success(json);
-                                                    } error:^(ASIHTTPRequest *ASIRequest, NSString *errorMsg) {
-                                                        errorBlock(errorMsg);
-                                                    }];
-    
-    return request;
+    NSURLRequest *request =
+    [[CUQQAPIClient shareObjectManager].requestSerializer multipartFormRequestWithMethod:@"POST"
+                                                                               URLString:[[NSURL URLWithString:@"t/add_pic_t"
+                                                                                                 relativeToURL:[NSURL URLWithString:baseURLString]]
+                                                                                          absoluteString]
+                                                                              parameters:@{
+                                                                                           @"access_token" : oAuth.accessToken,
+                                                                                           @"openid" : oAuth.openId,
+                                                                                           @"oauth_consumer_key" : oAuth.appId,
+                                                                                           @"format" : @"json"
+                                                                                           }
+                                                               constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+                                                                   [formData appendPartWithFileData:imageData
+                                                                                               name:@"content"
+                                                                                           fileName:@"image.jpg"
+                                                                                           mimeType:@"image/jpeg"];
+                                                               }
+                                                                                   error:nil];
+    AFHTTPRequestOperation *op = [[AFHTTPRequestOperation alloc] initWithRequest:request];
+    [op setCompletionBlockWithSuccess:^(AFHTTPRequestOperation *operation, id responseObject) {
+        NSError *error;
+        id json = [NSJSONSerialization JSONObjectWithData:responseObject options:0 error:&error];
+        if (error) {
+            errorBlock([error localizedDescription]);
+        } else {
+            success(json);
+        }
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        errorBlock([error localizedDescription]);
+    }];
+    return op;
 }
 
 @end

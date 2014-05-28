@@ -1,28 +1,31 @@
 PODS:
-  - ASIHTTPRequest (1.8.1):
-    - ASIHTTPRequest/ASIWebPageRequest
-    - ASIHTTPRequest/CloudFiles
-    - ASIHTTPRequest/S3
-    - Reachability
-  - ASIHTTPRequest/ASIWebPageRequest (1.8.1):
-    - Reachability
-  - ASIHTTPRequest/CloudFiles (1.8.1):
-    - Reachability
-  - ASIHTTPRequest/S3 (1.8.1):
-    - Reachability
-  - CURestKit (1.0.3):
-    - ASIHTTPRequest
-  - Reachability (3.1.1)
+  - AFNetworking (2.2.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+    - AFNetworking/UIKit
+  - AFNetworking/NSURLConnection (2.2.4):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.2.4):
+    - AFNetworking/NSURLConnection
+  - AFNetworking/Reachability (2.2.4)
+  - AFNetworking/Security (2.2.4)
+  - AFNetworking/Serialization (2.2.4)
+  - AFNetworking/UIKit (2.2.4):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
   - UALogger (0.2.3)
 
 DEPENDENCIES:
-  - CURestKit (~> 1.0.3)
+  - AFNetworking
   - UALogger (~> 0.2.3)
 
 SPEC CHECKSUMS:
-  ASIHTTPRequest: 0c9cb42c3c8dbe206493f89ce3f2834d550d3c00
-  CURestKit: 2486abd9b9face0f3aeedec245d0f8e8b19530c5
-  Reachability: 2be6bc2fd2bd31d97f5db33e75e4b29c79e95883
-  UALogger: abe2af53cf3a72fd8ed3625ee331c546c4c7bde9
+  AFNetworking: ab63e259fe91eef4519b371ef0a4955af0e73e64
+  UALogger: dde45daee52fd16f02e9f596a04b3f3e5794e0c2
 
-COCOAPODS: 0.24.0
+COCOAPODS: 0.33.1

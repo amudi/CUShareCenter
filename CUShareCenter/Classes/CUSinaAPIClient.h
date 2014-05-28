@@ -8,9 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-@class CUObjectManager;
+@class AFHTTPRequestOperationManager;
 @interface CUSinaAPIClient : NSObject
 
-+ (CUObjectManager *)shareObjectManager;
++ (AFHTTPRequestOperationManager *)shareObjectManager;
++ (NSURL *)baseURL;
 
 @end

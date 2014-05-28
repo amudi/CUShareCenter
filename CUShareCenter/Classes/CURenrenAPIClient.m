@@ -10,22 +10,26 @@
 
 @implementation CURenrenAPIClient
 
-+ (CUObjectManager *)shareObjectManager
++ (AFHTTPRequestOperationManager *)shareObjectManager
 {
     static dispatch_once_t pred = 0;
-    __strong static CUObjectManager *_sharedObject = nil;
+    __strong static AFHTTPRequestOperationManager *_sharedObject = nil;
     dispatch_once(&pred, ^{
-        _sharedObject = [[CUObjectManager alloc] init]; // or some other init method
-        _sharedObject.baseURLString = @"https://api.renren.com/";
+        _sharedObject = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[CURenrenAPIClient baseURL]];
         [CURenrenAPIClient setup:_sharedObject];
     });
     
     return _sharedObject;
 }
 
-+ (void)setup:(CUObjectManager *)objectManager
++ (void)setup:(AFHTTPRequestOperationManager *)objectManager
 {
     
+}
+
++ (NSURL *)baseURL
+{
+    return [NSURL URLWithString:@"https://api.renren.com/"];
 }
 
 @end

@@ -7,23 +7,24 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <CURestKit/CURestkit.h>
+#import <AFNetworking/AFHTTPRequestOperationManager.h>
+#import <AFNetworking/AFHTTPRequestOperation.h>
 #import <TencentOpenAPI/TencentOAuth.h>
 
 @interface CUQQAPIClient : NSObject
 
-+ (CUObjectManager *)shareObjectManager;
++ (AFHTTPRequestOperationManager *)shareObjectManager;
 
-+ (ASIHTTPRequest *)userInfoWithOAuth:(TencentOAuth *)oAuth
++ (AFHTTPRequestOperation *)userInfoWithOAuth:(TencentOAuth *)oAuth
                               success:(void (^)(id json))success
                                 error:(void (^)(NSString *errorMsg))errorBlock;
 
-+ (ASIHTTPRequest *)postContent:(NSString *)content
++ (AFHTTPRequestOperation *)postContent:(NSString *)content
                           OAuth:(TencentOAuth *)oAuth
                         success:(void (^)(id json))success
                           error:(void (^)(NSString *errorMsg))errorBlock;
 
-+ (ASIHTTPRequest *)postContent:(NSString *)content
++ (AFHTTPRequestOperation *)postContent:(NSString *)content
                       ImageData:(NSData *)imageData
                           OAuth:(TencentOAuth *)oAuth
                         success:(void (^)(id json))success

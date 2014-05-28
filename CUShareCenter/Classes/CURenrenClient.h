@@ -13,7 +13,6 @@
 #import "PlatFormModel.h"
 #import "CUPlatFormOAuth.h"
 #import "CUPlatFormUserModel.h"
-#import <CURestKit/CURestkit.h>
 
 @interface CURenrenClient : NSObject <CUShareClientDataSource, RennLoginDelegate>
 
